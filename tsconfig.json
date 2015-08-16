@@ -25,7 +25,6 @@
         "./src/models.ts",
         "./src/parser.ts",
         "./src/templates/go/index.ts",
-        "./src/templates/index.ts",
         "./src/templates/swift/index.ts",
         "./src/templates/template.ts",
         "./src/tokenizer.ts",

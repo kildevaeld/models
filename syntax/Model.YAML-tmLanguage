@@ -1,0 +1,111 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+name: Model
+scopeName: source.model
+fileTypes: [model]
+uuid: 750ac1f3-b172-48de-b1a4-a3c310c4a293
+
+patterns:
+- include: '#comments'
+- include: '#types'
+#- include: '#storagetypes'
+
+#- include: '#enum'
+
+- include: '#message'
+
+#- include: '#option'
+
+- include: '#constants'
+
+- include: '#strings'
+
+#- include: '#oneof'
+
+- include: '#packaging'
+
+- name: constant.numeric.model
+  match: \b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)\b
+
+repository:
+  comments:
+    patterns:
+    - name: comment.block.model
+      begin: /\*
+      end: \*/
+    - name: comment.line.double-slash.model
+      begin: //
+      end: $\n?
+
+  constants:
+    name: constant.language.model
+    match: \b(true|false|max)\b
+
+
+  message:
+    begin: (model|extend)(\s+)([A-Za-z][A-Za-z0-9_.]*)(\s*)(\{)?
+    beginCaptures:
+      '1': {name: keyword.source.model}
+      '3': {name: entity.name.class.message.model}
+    end: \}
+    patterns:
+    - include: $self
+    #- include: '#enum'
+    #- include: '#option'
+    - include: '#comments'
+    #- include: '#oneof'
+    - include: '#modifiers'
+    # - begin: (index|repeated|required|to|extensions)(\s+)
+    #   beginCaptures:
+    #     '1': {name: keyword.source.model}
+    #   end: ;
+    - include: '#validation'
+    - patterns:
+
+      - match: ([A-Za-z][A-Za-z0-9_]*:)(\s*)(\[?)([a-zA-Z][a-zA-Z0-9_]*)(\]?)
+        captures:
+          '1': {name: entity.name.class.model}
+          '4': {name: storage.name.class.model }
+      - include: '#storagetypes'
+      - begin: \[
+        end: \]
+        patterns:
+        - name: keyword.source.model
+          match: default|packed|deprecated|lazy
+        - include: '#constants'
+
+  validation:
+    begin: (validate|extend)(\s+)(\{)?
+    beginCaptures:
+      '1': {name: string.unquoted.model}
+    end: \}
+    patterns:
+    - include: '#validators'
+
+  packaging:
+    match: (package|import)(?=(\s+)(["]?[A-Za-z][A-Za-z0-9_./]*["]?)(;))
+    captures:
+      '1': {name: keyword.source.model}
+      '2': {name: entity.name.tag}
+
+  types:
+    match: (Types)(\s*)(\"?[A-Za-z][A-Za-z0-9_./]*\"?\s*) #(?=(\s+)(["]?[A-Za-z][A-Za-z0-9_./]*["]?)(;))
+    captures:
+      '1': {name: keyword.source.model}
+      '3': {name: entity.name.tag}
+
+  validators:
+    name: variable.language.model
+    match: \b(range|length|email|url|pattern)\b
+
+  storagetypes:
+   name: storage.type.model
+   match: \b(double|float|int|uint|int32|int64|uint32|uint64|bool|string|bytes|id)\b
+
+  modifiers:
+    name: keyword.source.model
+    match: \b(index|required|unique)\b
+
+  strings:
+    name: string.quoted.double.model
+    begin: '"'
+    end: '"'

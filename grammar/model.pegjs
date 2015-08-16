@@ -23,33 +23,39 @@
 }
 
 start
- = eol? types? eol? models:(
+ = p:package? eol? t:types? eol? m:models { return {models: m, package:p, types:t||[]}; }
+
+models
+ = models:(
     first: (eol? m:model eol? { return m; })
     rest: (eol? m:model eol? { return m; })* { return [first].concat(rest);}
-  ) { return models; }
+  ) { return models }
 
+package
+ = "package" space+ w:word LineTerminator { return w; }
 
 types
- = "Types" space? t:(
+ = "types" space? t:(
     first: type
     rest: (space? ","? m:type space? { return m; })* { return [first].concat(rest);}
-  ) { Types = t; }
+  ) { Types = t; return t; }
 
 type
  = word
 
 model
- = "model" name:modelName "{" eol? a:attributes eol? "}"
- { addModel(name); return {name:name,attributes:a}}
+ = c:comment? "model" name:modelName "{" eol? a:attributes eol? "}"
+ { addModel(name); return {name:name,attributes:a, comments: c}}
 
 attributes
  = space* attrs:(
-    first: (a:attribute eol? { return a;} )
+    first:(a:attribute eol? { return a;} )
     rest: (space? LineBreak? ","? eol? a:attribute { return a; })* { return [first].concat(rest);}
   ) { return attrs; }
 
 attribute
- =  space? m:modifiers? space? n:word space? ":" space? t:Type space? v:validate? { return {modifiers:m||[], name:n, type:t.name, validations: v||[], repeated:t.repeated}; }
+ =  c:comment? space? m:modifiers? space? n:word space? ":" space? t:Type space? v:validate? comment? {
+   return { modifiers:m||[], name:n, type:t.name, validations: v||[], repeated:t.repeated, comments:c}; }
 
 
 validate
@@ -122,6 +128,26 @@ eol
 LineBreak "linebreak"
   = "\n"
   / "\r"
+
+
+comment
+ = c:(space* c:Comment LineTerminator+ { return c;})* { return c; }
+
+Comment "comment"
+  = MultiLineComment
+  / SingleLineComment
+
+MultiLineComment
+  = "/*" c:(!"*/" s:SourceCharacter { return s; })* "*/" {
+      return c.join('').trim(); }
+
+MultiLineCommentNoLineTerminator
+  = "/*" (!("*/" / LineTerminator) SourceCharacter)* "*/"
+
+
+SingleLineComment
+  = "//" c:(!LineTerminator s:SourceCharacter { return s; })* {
+    return c.join('').trim(); }
 
 // Separator, Space
 Zs = [\u0020\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]

@@ -1,4 +1,4 @@
-Types date 
+Types date
 
 model Milestone {
   required id: id
@@ -7,6 +7,7 @@ model Milestone {
 }
 
 model Task {
+  // The id of the task
   required id: id
   required index title: string validate {
     length 200
