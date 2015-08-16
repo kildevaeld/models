@@ -30,7 +30,9 @@ interface Model {
 	content: string
 }
 
-const compile = program
+program.option('-l, --list-templates')
+
+const compileCmd = program
 //.description('Generate models')
 .command('compile <file>')
 .option('-t, --template <template>')
@@ -51,29 +53,12 @@ function asyncGlob(str:string): Promise<any> {
 	});
 }
 
-compile.action(function (file) {
-
-	/*try {
-		file = nodePath.resolve(process.cwd(), file)
-	} catch (e){
-		errorAndExit(e)
-	}*/
-
-	let template = compile.template
-	let destPath = compile.out
-	let concat = compile.concat
-
-	co(function *() {
-
-		let files = yield asyncGlob(file)
-
-		console.log(files)
-		return files
-
-		let json: Model[] = []
-		let models = yield parser.parseFile(file);
-		let renderer = findTemplate(template);
-		for (let i=0;i<models.length;i++) {
+function * compile (file: string, renderer?:any): File[] {
+	
+	let json: Model[] = [];
+	let models = yield parser.parseFile(file);
+	
+	for (let i=0;i<models.length;i++) {
 			let model = models[i]
 			let val
 			if (renderer) {
@@ -88,9 +73,38 @@ compile.action(function (file) {
 				name: model.name + val.extension,
 				content: val.content
 			}
-			//val.name = model.name + val.extension
+
 			json.push(val)
+	}
+	
+	return json;
+}
+
+compileCmd.action(function (globPattern) {
+
+	
+	let template = compileCmd.template,
+			destPath = compileCmd.out,
+			concat = compileCmd.concat
+
+	co(function *() {
+		
+		let files = yield asyncGlob(globPattern)
+	
+		let renderer = findTemplate(template);
+		
+		
+		let json: File[] = [], file: File, i;
+		
+		for (i=0;i<files.length;i++) {
+			let filePath = files[i];
+			
+			file = yield compile(filePath, renderer)
+			
+			json = json.concat(file)
+			
 		}
+		
 
 		if (renderer && renderer.additionalFiles) {
 			let val = yield renderer.additionalFiles()
@@ -99,14 +113,21 @@ compile.action(function (file) {
 		}
 
 		if (concat) {
-			let dest = nodePath.resolve()
+			
 			let file = json.map(function (m) {
-
 				return m.content
-			}).join('\n')
+			});
+			
+			if (renderer) {
+				file = file.join('\n');
+			} else {
+				file = JSON.stringify(JSON.parse('['+file.join(',')+']'),null,2);
+			}
+			
 			json = [{name:concat, content:file}]
 		}
-
+		
+		
 		for (let i=0;i<json.length;i++) {
 			let m = json[i]
 			if (destPath) {
@@ -128,6 +149,15 @@ const lint = program.command('lint <file>');
 
 lint.action(function (file) {
 
+});
+
+program.action(function () {
+	console.log('rapra')
+})
+
+program.command('*')
+.action(function () {
+	console.log('dette')
 })
 
 program.parse(process.argv)

@@ -1,0 +1,218 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const program = require('commander'),
+  parser = require('../lib/parser'),
+  File = require('../lib/templates/template'),
+  glob = require('glob'),
+  nodePath = require('path'),
+  co = require('co'),
+  fs = require('mz/fs');
+
+
+// Templates
+const swift = require('../lib/templates/swift'),
+  go = require('../lib/templates/go');
+
+function findTemplate(str) {
+  if (str == null) return null;
+  switch (str) {
+    case 'swift':
+      return swift
+    case 'go':
+      return go
+    default:
+      throw new Error('template not found');
+  }
+}
+
+
+function flatten(arr) {
+  return arr.reduce(function (flat, toFlatten) {
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+  }, []);
+}
+
+function asyncGlob(str) {
+
+	if (Array.isArray(str)) {
+		let p = str.map(function (s) {
+			return asyncGlob(s);
+		});
+
+		return Promise.all(p).then(function (files) {
+			return flatten(files);
+		});
+	}
+
+  return new Promise(function(resolve, reject) {
+    glob(str, function(e, files) {
+      if (e) return reject(e);
+
+      files = files.map(function(file) {
+        return nodePath.resolve(process.cwd(), file);
+      });
+
+      resolve(files);
+
+		});
+
+  });
+}
+
+function *compile(file, renderer) {
+
+  let json = [];
+  let models = yield parser.parseFile(file);
+
+  for (let i = 0; i < models.length; i++) {
+    let model = models[i]
+    let val
+    if (renderer) {
+      val = yield renderer.render(model)
+    } else {
+      val = {
+        content: JSON.stringify(model, null, 2),
+        extension: '.json'
+      }
+    }
+    val = {
+      name: model.name + val.extension,
+      content: val.content
+    }
+
+    json.push(val)
+
+	}
+
+  return json;
+}
+
+function parseOptions (opt) {
+  let json
+  try {
+    json = JSON.parse(opt)
+  } catch (e) {
+  }
+
+  if (!json || typeof json === 'function') {
+    try {
+      json = require(nodePath.resolve(opt));
+    } catch (e) {
+      errorAndExit(e)
+    }
+
+  }
+
+  console.log(json)
+}
+
+program.option('-t, --template <template>', 'template to use')
+  .option('-c, --concat <filename>', 'output models to one file')
+  .option('-d, --destination <path>', 'ouput path. If not defined, defaults to stdout')
+  .option('-o, --template-options <file>', 'Options sent to template generator', parseOptions)
+  .arguments('<file...>');
+
+program.command('list')
+.description('List available templates')
+.action(function () {
+
+  let templatePath = nodePath.resolve(__dirname, '../lib/templates');
+
+  co(function *() {
+
+    let files = yield fs.readdir(templatePath);
+
+    files = files.filter(function (file) {
+      return file !== 'template.js';
+    });
+
+    files.sort();
+
+    console.log('Available builtin templates:');
+    console.log('  ' + files.join('\n  ') + '\n');
+
+  });
+
+
+});
+
+
+program.parse(process.argv)
+
+if (program.list) { return; }
+
+let template = program.template,
+  destPath = program.destination,
+  concat = program.concat,
+  globPattern = program.args,
+  options = program.templateOptions||{};
+
+if (!globPattern.length) {
+	console.error('error');
+	process.exit(1);
+}
+
+function errorAndExit(e, code) {
+	console.error(e.message);
+	process.exit(code||1);
+}
+
+co(function*() {
+
+  let files = yield asyncGlob(globPattern)
+
+  let renderer = findTemplate(template);
+
+  let json = [],
+    file, i;
+
+  for (i = 0; i < files.length; i++) {
+    let filePath = files[i];
+
+    file = yield compile(filePath, renderer)
+
+    json = json.concat(file)
+
+  }
+
+  if (renderer && renderer.additionalFiles) {
+    let val = yield renderer.additionalFiles()
+
+    json = val.concat(json)
+  }
+
+  if (concat) {
+
+    let file = json.map(function(m) {
+      return m.content
+    });
+
+    if (renderer) {
+      file = file.join('\n');
+    } else {
+      file = JSON.stringify(JSON.parse('[' + file.join(',') + ']'), null, 2);
+    }
+
+    json = [{
+      name: concat,
+      content: file
+    }];
+  }
+
+  for (let i = 0; i < json.length; i++) {
+    let m = json[i]
+    if (destPath) {
+      let fp = nodePath.resolve(destPath, m.name)
+      yield fs.writeFile(fp, m.content + '\n')
+    } else {
+      process.stdout.write(m.content + '\n');
+    }
+
+  }
+
+}).then(function () {
+}).catch(function(e) {
+  errorAndExit(e)
+});

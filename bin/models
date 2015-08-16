@@ -1,2 +1,27 @@
 #!/usr/bin/env node
-require('../lib');
+'use strict';
+const program = require('commander'),
+	parser = require('../lib/parser'),
+	File = require('../lib/templates/template'),
+	glob = require('glob'),
+	nodePath = require('path'),
+	co = require('co'),
+	fs = require('mz/fs');
+
+function findTemplate (str) {
+	if (str == null) return null;
+	switch (str) {
+		case 'swift': return swift
+		case 'go': return go
+		default:
+			throw new Error('template not found');
+	}
+}
+
+
+program.option('-l, --list-templates')
+
+program.command('compile <file>', 'compile files')
+
+
+program.parse(process.argv)
