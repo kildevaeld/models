@@ -1,13 +1,14 @@
 /// <reference path="../typings/tsd.d.ts" />
 import program from 'commander'
 import * as parser from './parser'
+import {File} from './templates/template'
 const nodePath =  require('path')
 const co = require('co')
 const fs = require('mz/fs')
 
 function errorAndExit(e, code) {
 	console.error(e.stack);
-	exit(code||1);
+	process.exit(code||1);
 }
 
 import * as swift from './templates/swift'
@@ -29,6 +30,7 @@ interface Model {
 }
 
 const compile = program
+.description('Generate models')
 .command('compile <file>')
 .option('-t, --template <template>')
 .option('-c, --concat [filename]')
@@ -55,13 +57,20 @@ compile.action(function (file) {
 			if (renderer) {
 				val = yield renderer.render(model)
 			} else {
-				val = JSON.stringify(model, null, 2)
+				val = {
+					content: JSON.stringify(model, null, 2),
+					extension: '.json'
+				} 
 			}
-			val.name = model.name + val.extension
+			val = {
+				name: model.name + val.extension,
+				content: val.content
+			}
+			//val.name = model.name + val.extension
 			json.push(val)
 		}
 		
-		if (renderer.additionalFiles) {
+		if (renderer && renderer.additionalFiles) {
 			let val = yield renderer.additionalFiles()
 			
 			json = val.concat(json)
@@ -80,9 +89,9 @@ compile.action(function (file) {
 			let m = json[i]
 			if (destPath) {
 				let fp = nodePath.resolve(destPath, m.name)
-				yield fs.writeFile(fp, m.content)
+				yield fs.writeFile(fp, m.content + '\n')
 			} else {
-				process.stdout.write(m.content);
+				process.stdout.write(m.content + '\n');
 			}
 			
 		}
@@ -90,6 +99,12 @@ compile.action(function (file) {
 	}).catch(function (e) {
 		errorAndExit(e)
 	})
+	
+})
+
+const lint = program.command('lint <file>');
+
+lint.action(function (file) {
 	
 })
 
