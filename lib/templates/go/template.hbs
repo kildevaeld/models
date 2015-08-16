@@ -1,0 +1,12 @@
+
+type {{name}} struct {
+{{#each attributes}}
+	{{name}}: {{type}} {{json}}
+{{/each}}
+}
+
+func New{{name}} ({{params}}) *{{name}} {
+	return &{{name}} {
+		{{body}}
+	}
+}

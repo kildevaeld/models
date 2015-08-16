@@ -1,0 +1,29 @@
+Types date 
+
+model Milestone {
+  required id: id
+  required index title: string
+  description: string
+}
+
+model Task {
+  required id: id
+  required index title: string validate {
+    length 200
+  }
+  description: string
+  expire: date
+  milestones: [Milestone]
+}
+
+model Project {
+  required index id: id
+  required index title: string
+  description: string
+  task: [Task]
+  milestones: [Milestone]
+  website: string validate {
+    url
+    pattern /[a-z]*/mig
+  }
+}

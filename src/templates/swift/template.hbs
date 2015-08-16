@@ -1,0 +1,13 @@
+
+
+class {{name}}: Reflectable {
+{{#each attributes}}
+  var {{name}}: {{type}}
+{{/each}}
+{{#each initializers as |value|}}
+  init({{value.params}}) {
+    {{value.body}}
+  }
+{{/each}}
+
+}

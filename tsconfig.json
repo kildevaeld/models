@@ -1,0 +1,35 @@
+{
+    "version": "1.6.0",
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "isolatedModules": false,
+        "jsx": "react",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false,
+        "preserveConstEnums": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "outDir": "lib"
+    },
+    "filesGlob": [
+        "./**/*.ts",
+        "./**/*.tsx",
+        "!./node_modules/**/*"
+    ],
+    "files": [
+        "./src/index.ts",
+        "./src/models.ts",
+        "./src/parser.ts",
+        "/.src/tokenizer.ts",
+        "./src/templates/template.ts",
+        "./src/templates/swift/index.ts",
+        "./typings/es6-promise/es6-promise.d.ts",
+        "./typings/node/node.d.ts",
+        "./typings/parser.d.ts",
+        "./typings/tsd.d.ts"
+    ]
+}
