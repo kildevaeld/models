@@ -1,6 +1,6 @@
 {
   "name": "models",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "lib/index.js",
   "bin": {
@@ -24,7 +24,6 @@
     "co": "^4.6.0",
     "commander": "^2.8.1",
     "glob": "^5.0.14",
-    "handlebars": "^3.0.3",
-    "hbs": "^3.1.0"
+    "handlebars": "^3.0.3"
   }
 }

@@ -90,7 +90,7 @@ modifier
  = RequiedToken
  / IndexToken
  / UniqueToken
-
+ / ReadonlyToken
 
 RequiedToken
  = "required"
@@ -100,6 +100,9 @@ IndexToken
 
 UniqueToken
   = "unique"
+
+ReadonlyToken
+  = "readonly"
 
 space
   = WhiteSpace
@@ -267,4 +270,3 @@ HexDigit
 
 LineTerminator
   = [\n\r\u2028\u2029]
-
