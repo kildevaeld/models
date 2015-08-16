@@ -15,7 +15,6 @@
     "gulp": "^3.9.0",
     "gulp-babel": "^5.1.0",
     "gulp-typescript": "^2.8.0",
-    "mz": "^2.0.0",
     "pegjs": "^0.8.0",
     "pipe": "git+https://github.com/kildevaeld/node-pipe.git",
     "typescript": "microsoft/typescript"
@@ -24,6 +23,8 @@
     "co": "^4.6.0",
     "commander": "^2.8.1",
     "glob": "^5.0.14",
-    "handlebars": "^3.0.3"
+    "handlebars": "^3.0.3",
+    "mz": "^2.0.0",
+    "pipe": "git+https://github.com/kildevaeld/node-pipe.git"
   }
 }
