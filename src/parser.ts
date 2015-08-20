@@ -52,15 +52,11 @@ export function parseString (str:string): IModel[] {
 
   if (models === null) return;
 
-  for (let model of models) {
-    JSONToIModel(model)
-  }
-
-  return models
+  return parseResult(models)
 }
 
 
-export function parseFile (path: string): Promise<Array<models.IModel>> {
+export function parseFile (path: string): Promise<Array<IModel>> {
   let extname = nodePath.extname(path);
 
   return co(function * () {
@@ -80,11 +76,20 @@ export function parseFile (path: string): Promise<Array<models.IModel>> {
 
     if (models === null) return;
 
-    for (let model of models) {
-      JSONToIModel(model)
-    }
-
-    return models
+    return parseResult(models)
+    
   });
 
+}
+
+
+function parseResult (result:any): IModel[] {
+  let pack = result.package||'main';
+  let types = result.types
+  let models = result.models.map(function (m) {
+    m = JSONToIModel(m)
+    m.package = pack
+    return m
+  })
+  return models
 }

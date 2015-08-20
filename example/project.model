@@ -1,4 +1,5 @@
-Types date
+package main
+types date Project
 
 model Milestone {
   required id: id
@@ -8,15 +9,16 @@ model Milestone {
 
 model Task {
   // The id of the task
-  required id: id
+  readonly required id: id
   required index title: string validate {
     length 200
   }
   description: string
   expire: date
   milestones: [Milestone]
+  project: Project
 }
-
+/* What about this for a comment */
 model Project {
   required index id: id
   required index title: string

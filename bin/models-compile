@@ -105,7 +105,7 @@ function parseOptions (opt) {
 
   }
 
-  console.log(json)
+  return json
 }
 
 program.option('-t, --template <template>', 'template to use')
@@ -114,34 +114,11 @@ program.option('-t, --template <template>', 'template to use')
   .option('-o, --template-options <file>', 'Options sent to template generator', parseOptions)
   .arguments('<file...>');
 
-program.command('list')
-.description('List available templates')
-.action(function () {
 
-  let templatePath = nodePath.resolve(__dirname, '../lib/templates');
-
-  co(function *() {
-
-    let files = yield fs.readdir(templatePath);
-
-    files = files.filter(function (file) {
-      return file !== 'template.js';
-    });
-
-    files.sort();
-
-    console.log('Available builtin templates:');
-    console.log('  ' + files.join('\n  ') + '\n');
-
-  });
-
-
-});
 
 
 program.parse(process.argv)
 
-if (program.list) { return; }
 
 let template = program.template,
   destPath = program.destination,
@@ -155,7 +132,7 @@ if (!globPattern.length) {
 }
 
 function errorAndExit(e, code) {
-	console.error(e.message);
+	console.error(e.stack);
 	process.exit(code||1);
 }
 

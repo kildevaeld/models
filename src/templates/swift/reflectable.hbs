@@ -9,26 +9,25 @@ struct PropertyMap {
     let value: Any?
 }
 
-
 extension Reflectable {
     func properties()-> [PropertyMap] {
         var s = [PropertyMap]()
-        
+
         let ref = Mirror(reflecting: self)
-        
+
         for c in ref.children {
-            
+
             if let name = c.label{
                 s.append(PropertyMap(name: name, value: c.value))
             }
         }
         return s
     }
-    
+
     func serialize() -> [String:Any] {
         var out: [String:Any] = [:]
         let props = self.properties()
-        
+
         for prop in props {
             if let r = prop.value as? Reflectable {
                 out[prop.name] = r.serialize()
@@ -36,8 +35,8 @@ extension Reflectable {
                 out[prop.name] = prop.value
             }
         }
-        
+
         return out
     }
-    
+
 }

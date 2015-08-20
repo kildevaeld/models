@@ -25,3 +25,54 @@ program.command('compile <file>', 'compile files')
 
 
 program.parse(process.argv)
+
+if (program.runningCommand) {
+	return
+}
+
+if (program.listTemplates) {
+	listTemplates();
+}
+
+function listTemplates () {
+	let templatePath = nodePath.resolve(__dirname, '../lib/templates');
+
+  co(function *() {
+
+    let files = yield fs.readdir(templatePath);
+
+    files = files.filter(function (file) {
+      return file !== 'template.js';
+    });
+
+    files.sort();
+
+    console.log('Available builtin templates:');
+    console.log('  ' + files.join('\n  ') + '\n');
+
+  });
+}
+
+/*program.command('list')
+.description('List available templates')
+.action(function () {
+
+  let templatePath = nodePath.resolve(__dirname, '../lib/templates');
+
+  co(function *() {
+
+    let files = yield fs.readdir(templatePath);
+
+    files = files.filter(function (file) {
+      return file !== 'template.js';
+    });
+
+    files.sort();
+
+    console.log('Available builtin templates:');
+    console.log('  ' + files.join('\n  ') + '\n');
+
+  });
+
+
+});*/

@@ -1,6 +1,13 @@
+package {{package}}
 
+{{#each comments}}
+// {{this}}
+{{/each}}
 type {{name}} struct {
 {{#each attributes}}
+	{{#each comments}}
+	// {{this}}
+	{{/each}}
 	{{name}}: {{type}} {{json}}
 {{/each}}
 }

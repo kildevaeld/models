@@ -12,6 +12,7 @@ function errorAndExit(e, code?) {
 	process.exit(code||1);
 }
 
+
 import * as swift from './templates/swift'
 import * as go from './templates/go'
 

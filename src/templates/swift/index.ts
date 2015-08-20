@@ -23,38 +23,43 @@ export function swiftType (type: IAttributeType): string {
 	}
 }
 
-export function render (model:IModel): Promise<TemplateResult> {
+export function render (model:IModel, options:any = {}): Promise<TemplateResult> {
 	return co(function *() {
 		let value:any = {
 			name: model.name,
-			initializers: []
+			initializers: [],
+			options: options,
+			comments: model.comments
 		}
 		let required = [];
-		
+
 		value.attributes = model.attributes.map(function (attr) {
 			let req = !!~attr.modifiers.indexOf('required')
+			let readonly = !!~attr.modifiers.indexOf('readonly')
 			let tname = swiftType(attr.type)
 			let type = attr.repeated ? `[${tname}]` : tname
 			type += ((req || attr.repeated) ? '' : '?')
-			
+
 			if (req) {
 				required.push({
 					name: attr.name,
 					type: tname
 				})
-			} 
+			}
 			
 			return {
 				name: attr.name,
 				type: type,
-				required: req
+				required: req,
+				readonly: readonly,
+				comments: attr.comments
 			}
 		});
-		
+
 		let rinit = required.map(function (m) {
 			return `${m.name}: ${m.type}`
 		})
-		
+
 		value.initializers.push({
 			params: rinit.join(', '),
 			body: required.map(function (m) {
@@ -66,16 +71,16 @@ export function render (model:IModel): Promise<TemplateResult> {
 				return `${m.name}: ${m.type}`
 			}).join(', '),
 			body: value.attributes.map(function (m) {
-				return `self.${m.name} = ${m.name}` 
+				return `self.${m.name} = ${m.name}`
 			}).join('\n    ')
 		});
-		
+
 		return {
 			extension: '.swift',
 			content:  yield compile(nodePath.join(__dirname,'template.hbs'), value)
 		}
 	});
- 
+
 }
 
 export function *additionalFiles(): Promise<File[]> {

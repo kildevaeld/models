@@ -27,7 +27,9 @@ export function render (model:IModel): Promise<TemplateResult> {
 	return co(function *() {
 		let value:any = {
 			name: model.name,
-			initializers: []
+			initializers: [],
+			comments: model.comments,
+			package: model.package
 		}
 		let required = [];
 		
@@ -47,7 +49,8 @@ export function render (model:IModel): Promise<TemplateResult> {
 			return {
 				name: attr.name,
 				type: type,
-				required: req
+				required: req,
+				comments: attr.comments
 			}
 		});
 		

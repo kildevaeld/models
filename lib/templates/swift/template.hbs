@@ -1,13 +1,38 @@
 
-
-class {{name}}: Reflectable {
-{{#each attributes}}
-  var {{name}}: {{type}}
+{{#each comments}}
+// {{this}}
 {{/each}}
+class {{name}}: {{#if options.base}}{{options.base}}, {{/if}}Reflectable {
+{{#each attributes}}
+  {{#unless readonly}}
+  private var _{{name}}: {{type}}
+  {{/unless}}
+{{/each}}
+
+{{#each attributes}}
+  {{#each comments}}
+  // {{this}}
+	{{/each}}
+  {{#if readonly}}
+  let {{name}}: {{type}}
+  {{else}}
+  var {{name}}: {{type}} {
+    get {
+      return self._{{name}}
+    } set (value) {
+      self._{{name}} = value
+    }
+  }
+  {{/if}}
+{{/each}}
+
 {{#each initializers as |value|}}
   init({{value.params}}) {
     {{value.body}}
   }
 {{/each}}
+  func validate () throws {
+  
+  }
 
 }
