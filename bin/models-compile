@@ -127,7 +127,7 @@ let template = program.template,
   options = program.templateOptions||{};
 
 if (!globPattern.length) {
-	console.error('error');
+	console.error('Usage: models-compile *.model');
 	process.exit(1);
 }
 

@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const program = require('commander'),
+    tokenizer = require('../lib/tokenizer'),
+    fs = require('mz/fs'),
+    nodePath = require('path');
+
+program.option('-j, --json')
+program.arguments('<file>', 'file to lint');
+
+program.parse(process.argv)
+
+let files = program.args;
+
+if (!files || !files.length) {
+  console.error('no file');
+  process.exit(1);
+}
+
+files = nodePath.resolve(files[0]);
+fs.readFile(files, 'utf8')
+.then(function (data) {
+
+  try {
+    tokenizer.parse(data);
+  } catch (e) {
+    console.log(renderMessage(e, program.json));
+    return;
+  }
+
+  console.log(program.json ? JSON.stringify({message:'OK'}) : 'OK');
+
+})
+
+function renderMessage(e, json) {
+  json = json == null ? false : json;
+
+  if (json) {
+    return JSON.stringify({
+      message: e.message,
+      line: e.line,
+      column: e.column,
+      offset: e.line,
+      expected: e.expected,
+      found: e.found
+    }, null, 2);
+  } else {
+    return e.message + ' at line: ' + e.line + ', column: ' + e.column
+  }
+
+}

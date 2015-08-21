@@ -23,8 +23,8 @@ function findTemplate (str) {
 
 program.version(pkg.version)
 .option('-l, --list-templates')
-.command('compile <file>', 'compile files');
-
+.command('compile <file>', 'compile files. Can use globbing')
+.command('lint <file>', 'lint file')
 
 program.parse(process.argv)
 

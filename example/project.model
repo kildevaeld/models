@@ -2,7 +2,7 @@ package main
 types date Project
 
 model Milestone {
-  required id: id
+  rap required id: id
   required index title: string
   description: string
 }
