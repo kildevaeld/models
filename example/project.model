@@ -1,8 +1,8 @@
 package main
 types date Project
 
-model Milestone {
-  rap required id: id
+public model Milestone {
+  required id: id
   required index title: string
   description: string
 }
@@ -18,7 +18,7 @@ model Task {
   milestones: [Milestone]
   project: Project
 }
-/* What about this for a comment */
+/** What about this for a comment */
 model Project {
   required index id: id
   required index title: string

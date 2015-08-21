@@ -82,13 +82,13 @@ repository:
     - include: '#validators'
 
   packaging:
-    match: (package|import)(?=(\s+)(["]?[A-Za-z][A-Za-z0-9_./]*["]?)(;))
+    match: (package|import)(?=(\s+)(["]?[A-Za-z][A-Za-z0-9_./]*["]?)(;)?)
     captures:
       '1': {name: keyword.source.model}
       '2': {name: entity.name.tag}
 
   types:
-    match: (Types)(\s*)(\"?[A-Za-z][A-Za-z0-9_./]*\"?\s*) #(?=(\s+)(["]?[A-Za-z][A-Za-z0-9_./]*["]?)(;))
+    match: (types)(\s*)(\"?[A-Za-z][A-Za-z0-9_.\s/]*\"?\s*) #(?=(\s+)(["]?[A-Za-z][A-Za-z0-9_./]*["]?)(;))
     captures:
       '1': {name: keyword.source.model}
       '3': {name: entity.name.tag}
@@ -103,7 +103,7 @@ repository:
 
   modifiers:
     name: keyword.source.model
-    match: \b(index|required|unique)\b
+    match: \b(index|required|unique|readonly)\b
 
   strings:
     name: string.quoted.double.model

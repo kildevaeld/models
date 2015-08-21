@@ -44,8 +44,8 @@ type
  = word
 
 model
- = c:comment? "model" name:modelName "{" eol? a:attributes eol? "}"
- { addModel(name); return {name:name,attributes:a, comments: c}}
+ = c:comment? ac:Access? space? "model" name:modelName "{" eol? a:attributes eol? "}"
+ { addModel(name); return {name:name,attributes:a, comments: c, access:ac}}
 
 attributes
  = space* attrs:(
@@ -54,8 +54,8 @@ attributes
   ) { return attrs; }
 
 attribute
- =  c:comment? space? m:modifiers? space? n:word space? ":" space? t:Type space? v:validate? comment? {
-   return { modifiers:m||[], name:n, type:t.name, validations: v||[], repeated:t.repeated, comments:c}; }
+ =  c:comment? space? ac:Access? space? m:modifiers? space? n:word space? ":" space? t:Type space? v:validate? comment? {
+   return { modifiers:m||[], name:n, type:t.name, validations: v||[], repeated:t.repeated, comments:c, access:ac}; }
 
 
 validate
@@ -88,11 +88,11 @@ TypeToken "type"
 
 modifiers
   = space? m:(
-    first: modifier
-    rest: (space? mm:modifier { return mm; })* { return [first].concat(rest);}
+    first: Modifier
+    rest: (space? mm:Modifier { return mm; })* { return [first].concat(rest);}
   ) { return m; }
 
-modifier
+Modifier
  = RequiedToken
  / IndexToken
  / UniqueToken
@@ -109,6 +109,11 @@ UniqueToken
 
 ReadonlyToken
   = "readonly"
+
+Access
+ = "public"
+ / "private"
+ / "protected"
 
 space
   = WhiteSpace
