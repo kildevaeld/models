@@ -8,6 +8,9 @@ const program = require('commander'),
 	co = require('co'),
 	fs = require('mz/fs');
 
+const pkg = require(nodePath.join(__dirname, '../package.json'));
+
+
 function findTemplate (str) {
 	if (str == null) return null;
 	switch (str) {
@@ -18,10 +21,9 @@ function findTemplate (str) {
 	}
 }
 
-
-program.option('-l, --list-templates')
-
-program.command('compile <file>', 'compile files')
+program.version(pkg.version)
+.option('-l, --list-templates')
+.command('compile <file>', 'compile files');
 
 
 program.parse(process.argv)

@@ -11,7 +11,7 @@ class {{name}}: {{#if options.base}}{{options.base}}, {{/if}}Reflectable {
 
 {{#each attributes}}
   {{#each comments}}
-  // {{this}}
+	// {{this}}
 	{{/each}}
   {{#if readonly}}
   let {{name}}: {{type}}
