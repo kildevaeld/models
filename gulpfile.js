@@ -60,5 +60,5 @@ gulp.task('copy', function () {
 gulp.task('default', ['compile:peg', 'build']);
 
 gulp.task('watch', ['build'], function () {
-  gulp.watch(['./src/**/*.ts','./src/**/.hbs'], ['build', 'copy']);
+  gulp.watch(['./src/**/*.ts','./src/**/*.hbs'], ['build', 'copy']);
 });

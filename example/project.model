@@ -15,7 +15,7 @@ model Task {
   }
   description: string
   expire: date
-  milestones: [Milestone]
+  unique milestones: [Milestone]
   project: Project
 }
 /** What about this for a comment */

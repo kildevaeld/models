@@ -11,6 +11,7 @@ export interface IAttributeType {
   name: string
 }
 
+
 export class AttributeBuiltinType implements IAttributeType {
   identifier: AttributeIdentifier
   get name (): string {

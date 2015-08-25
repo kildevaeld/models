@@ -1,4 +1,4 @@
-package {{package}}
+
 
 {{#each comments}}
 // {{this}}
@@ -8,9 +8,21 @@ type {{name}} struct {
 	{{#each comments}}
 	// {{this}}
 	{{/each}}
-	{{name}}: {{type}} {{json}}
+	{{#unless readonly}}
+	{{name}} {{type}} {{#if json}} `json:"{{json}}"` {{/if}}
+	{{else}}
+	{{json}} {{type}} {{#if json}} `json:"{{json}}"` {{/if}}
+	{{/unless}}
 {{/each}}
 }
+
+{{#each attributes}}
+{{#if readonly}}
+func (p *{{../../name}})	Get{{name}}() {{type}} {
+	return p.{{json}}
+}
+{{/if}}
+{{/each}}
 
 func New{{name}} ({{params}}) *{{name}} {
 	return &{{name}} {

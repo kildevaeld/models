@@ -12,7 +12,6 @@ function errorAndExit(e, code?) {
 	process.exit(code||1);
 }
 
-
 import * as swift from './templates/swift'
 import * as go from './templates/go'
 
@@ -54,6 +53,7 @@ function asyncGlob(str:string): Promise<any> {
 	});
 }
 
+
 function * compile (file: string, renderer?:any): File[] {
 	
 	let json: Model[] = [];
@@ -70,6 +70,7 @@ function * compile (file: string, renderer?:any): File[] {
 					extension: '.json'
 				}
 			}
+			
 			val = {
 				name: model.name + val.extension,
 				content: val.content

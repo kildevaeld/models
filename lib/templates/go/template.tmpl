@@ -1,0 +1,28 @@
+
+<% for (var i=0; i < comments.length; i++) { %>
+// <%= comments[i] %> <% } %>
+type <%= name %> struct {
+	<% for (var i=0;i<attributes.length; i++) { var a = attributes[i]; %>
+		<% for (var x=0; x < a.comments.length; x++) { %>
+		// <%= a.comments[x] %> <% } %>
+		
+		<% if (a.readonly || a.access === 'private') { %>
+		<%= a.name.toLowerCase() %> <%= a.type %> `json:"<%= a.json %>"`
+		
+		<% } else {%>
+		
+		<%= a.name.capitalize() %> <%= a.type %> `json:"<%= a.json %>"`
+		
+		<% } %>
+	<% } %>
+}
+
+
+<% for (var i=0;i<attributes.length; i++) { var a = attributes[i]; %>
+<% if (a.readonly && a.access !== 'private') { %>
+func (<%= name[0].toLowerCase() %> *<%= name %>) Get<%=a.name%> () <%= a.type %> {
+	return t.<%=a.name.toLowerCase()%>
+} 
+<% } %> 
+
+<% } %>
