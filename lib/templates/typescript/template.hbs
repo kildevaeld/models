@@ -1,0 +1,41 @@
+'use strict';
+
+{{#each comments}}
+// {{this}}
+{{/each}}
+class {{name}} {
+  {{#each attributes}}
+  private _{{name}}: {{type}}
+  {{/each}}
+  
+  {{#each attributes}}
+  {{#each comments}}
+  // {{this}}
+  {{/each}}
+  {{access}} get {{name}}: {{type}} {
+    return this._{{name}};
+  }
+  {{#unless readonly}}
+  {{access}} set {{name}}({{name}}:{{type}}) {
+    this._{{name}} = {{name}}
+  } 
+  {{/unless}}
+  {{/each}}
+  
+  /**
+  {{#each attributes}}
+  {{#if required}}  
+   * @param {{type}} {{name}}  
+  {{/if}}
+  {{/each}}
+   */
+  constructor({{init}}) {
+    {{#each attributes}}
+    {{#if required}}  
+    this._{{name}} = {{name}};  
+    {{/if}}
+    {{/each}}
+  
+  }
+  
+}

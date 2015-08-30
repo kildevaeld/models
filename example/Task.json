@@ -1,0 +1,100 @@
+{
+  "name": "Task",
+  "attributes": [
+    {
+      "modifiers": [
+        "readonly",
+        "required"
+      ],
+      "name": "id",
+      "type": {
+        "identifier": 11,
+        "name": "Id"
+      },
+      "validations": [],
+      "repeated": false,
+      "comments": [
+        "The id of the task"
+      ],
+      "access": null
+    },
+    {
+      "modifiers": [
+        "required",
+        "index"
+      ],
+      "name": "title",
+      "type": {
+        "identifier": 10,
+        "name": "String"
+      },
+      "validations": [
+        {
+          "name": "length",
+          "args": [
+            200
+          ]
+        }
+      ],
+      "repeated": false,
+      "comments": [],
+      "access": null
+    },
+    {
+      "modifiers": [],
+      "name": "description",
+      "type": {
+        "identifier": 10,
+        "name": "String"
+      },
+      "validations": [],
+      "repeated": false,
+      "comments": [],
+      "access": null
+    },
+    {
+      "modifiers": [],
+      "name": "expire",
+      "type": {
+        "identifier": 14,
+        "value": "date",
+        "name": "Custom"
+      },
+      "validations": [],
+      "repeated": false,
+      "comments": [],
+      "access": null
+    },
+    {
+      "modifiers": [
+        "unique"
+      ],
+      "name": "milestones",
+      "type": {
+        "identifier": 13,
+        "reference": "Milestone",
+        "name": "Reference"
+      },
+      "validations": [],
+      "repeated": true,
+      "comments": [],
+      "access": null
+    },
+    {
+      "modifiers": [],
+      "name": "project",
+      "type": {
+        "identifier": 14,
+        "value": "Project",
+        "name": "Custom"
+      },
+      "validations": [],
+      "repeated": false,
+      "comments": [],
+      "access": null
+    }
+  ],
+  "comments": [],
+  "access": null,
+  "package": "main"
+}

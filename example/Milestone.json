@@ -1,0 +1,49 @@
+{
+  "name": "Milestone",
+  "attributes": [
+    {
+      "modifiers": [
+        "required"
+      ],
+      "name": "id",
+      "type": {
+        "identifier": 11,
+        "name": "Id"
+      },
+      "validations": [],
+      "repeated": false,
+      "comments": [],
+      "access": null
+    },
+    {
+      "modifiers": [
+        "required",
+        "index"
+      ],
+      "name": "title",
+      "type": {
+        "identifier": 10,
+        "name": "String"
+      },
+      "validations": [],
+      "repeated": false,
+      "comments": [],
+      "access": null
+    },
+    {
+      "modifiers": [],
+      "name": "description",
+      "type": {
+        "identifier": 10,
+        "name": "String"
+      },
+      "validations": [],
+      "repeated": false,
+      "comments": [],
+      "access": null
+    }
+  ],
+  "comments": [],
+  "access": "public",
+  "package": "main"
+}

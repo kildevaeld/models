@@ -14,12 +14,15 @@ function errorAndExit(e, code?) {
 
 import * as swift from './templates/swift'
 import * as go from './templates/go'
+import * as typescript from './template/typescript'
 
 function findTemplate (str?:name) {
 	if (str == null) return null
 	switch (str) {
 		case 'swift': return swift
 		case 'go': return go
+		case 'typescript':
+		case 'ts': return typescript
 		default:
 			throw new Error('template not found');
 	}

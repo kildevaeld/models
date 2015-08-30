@@ -13,7 +13,8 @@ const program = require('commander'),
 
 // Templates
 const swift = require('../lib/templates/swift'),
-  go = require('../lib/templates/go');
+  go = require('../lib/templates/go'),
+  ts = require('../lib/templates/typescript');
 
 function findTemplate(str) {
   if (str == null) return null;
@@ -22,6 +23,9 @@ function findTemplate(str) {
       return swift
     case 'go':
       return go
+    case 'typescript':
+    case 'ts':
+      return ts;
     default:
       throw new Error('template not found');
   }

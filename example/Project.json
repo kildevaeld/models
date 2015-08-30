@@ -1,0 +1,101 @@
+{
+  "name": "Project",
+  "attributes": [
+    {
+      "modifiers": [
+        "required",
+        "index"
+      ],
+      "name": "id",
+      "type": {
+        "identifier": 11,
+        "name": "Id"
+      },
+      "validations": [],
+      "repeated": false,
+      "comments": [],
+      "access": null
+    },
+    {
+      "modifiers": [
+        "required",
+        "index"
+      ],
+      "name": "title",
+      "type": {
+        "identifier": 10,
+        "name": "String"
+      },
+      "validations": [],
+      "repeated": false,
+      "comments": [],
+      "access": null
+    },
+    {
+      "modifiers": [],
+      "name": "description",
+      "type": {
+        "identifier": 10,
+        "name": "String"
+      },
+      "validations": [],
+      "repeated": false,
+      "comments": [],
+      "access": null
+    },
+    {
+      "modifiers": [],
+      "name": "task",
+      "type": {
+        "identifier": 13,
+        "reference": "Task",
+        "name": "Reference"
+      },
+      "validations": [],
+      "repeated": true,
+      "comments": [],
+      "access": null
+    },
+    {
+      "modifiers": [],
+      "name": "milestones",
+      "type": {
+        "identifier": 13,
+        "reference": "Milestone",
+        "name": "Reference"
+      },
+      "validations": [],
+      "repeated": true,
+      "comments": [],
+      "access": null
+    },
+    {
+      "modifiers": [],
+      "name": "website",
+      "type": {
+        "identifier": 10,
+        "name": "String"
+      },
+      "validations": [
+        {
+          "name": "url"
+        },
+        {
+          "name": "regexp",
+          "args": [
+            "[a-z]*",
+            "mig"
+          ]
+        }
+      ],
+      "repeated": false,
+      "comments": [],
+      "access": null
+    }
+  ],
+  "comments": [
+    "* What about this for a comment"
+  ],
+  "access": null,
+  "package": "main"
+}

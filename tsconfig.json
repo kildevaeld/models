@@ -27,6 +27,7 @@
         "./src/templates/go/index.ts",
         "./src/templates/swift/index.ts",
         "./src/templates/template.ts",
+        "./src/templates/typescript/index.ts",
         "./src/tokenizer.ts",
         "./typings/commander/commander.d.ts",
         "./typings/es6-promise/es6-promise.d.ts",

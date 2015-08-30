@@ -16,6 +16,7 @@ export function compile(path:string, locals?:any): Promise<string> {
 	});
 }
 
+
 export interface TemplateResult {
 	extension: string
 	content: string
