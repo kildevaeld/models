@@ -6,7 +6,6 @@ const nodePath = require('path');
 const co = require('co');
 const fs = require('mz/fs')
 
-
 export function tsType (type: IAttributeType): string {
 	let ai = AttributeIdentifier
 	
@@ -31,6 +30,10 @@ export function render (model:IModel): Promise<TemplateResult> {
 		var value = model
 		var required = []
 		value.attributes = value.attributes.map(function (m) {
+			if (m.type instanceof AttributeReferenceType) {
+				m.reference = m.type.reference
+			}
+			
 			m.type = tsType(m.type);
 			m.access = m.access||'public'
 			m.readonly = !!~m.modifiers.indexOf('readolny');

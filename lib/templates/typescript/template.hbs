@@ -1,4 +1,9 @@
 'use strict';
+{{#each attributes}}
+{{#if reference}}
+import { {{reference}} } from './{{reference}}'
+{{/if}}
+{{/each}}
 
 {{#each comments}}
 // {{this}}
@@ -12,7 +17,7 @@ class {{name}} {
   {{#each comments}}
   // {{this}}
   {{/each}}
-  {{access}} get {{name}}: {{type}} {
+  {{access}} get {{name}}(): {{type}} {
     return this._{{name}};
   }
   {{#unless readonly}}
