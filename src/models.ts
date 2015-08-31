@@ -2,8 +2,8 @@
 
 export enum AttributeIdentifier {
   // numbers
-  UInt64, UInt32, UInt16, UInt8,Int64, Int32, Int16, Int8, Float, Double, 
-  String, Id, Boolean, Reference, Custom
+  UInt64, UInt32, UInt16, UInt8,Int64, Int32, Int16, Int8, Int, UInt, Float, Double, 
+  String, Id, Boolean, Reference, Custom, Date
 }
 
 export interface IAttributeType {

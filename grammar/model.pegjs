@@ -169,11 +169,14 @@ builtins
  / "uint16"
  / "uint32"
  / "uint64"
+ / "int"
+ / "uint"
  / "float"
  / "double"
  / "string"
  / "boolean"
  / "id"
+ / "date"
 
 
 integer

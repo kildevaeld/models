@@ -37,6 +37,8 @@ export function goType (type: IAttributeType): string {
 			return '*' + (<AttributeReferenceType>type).reference
 		case ai.Id:
 			return "int"
+		case ai.Date:
+			return "*time.Time"
 		default:
 			return type.name.toLowerCase()
 	}

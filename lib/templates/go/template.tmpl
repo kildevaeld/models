@@ -2,6 +2,7 @@ package <%= package %>
 
 import (
 	"encoding/json"
+	"github.com/fatih/structs"
 )
 
 <% for (var i=0; i < comments.length; i++) { %>
@@ -24,8 +25,13 @@ type <%= name %> struct {
 
 <% var short = name[0].toLowerCase(); %>
 
-func (<%= short %> *<%= name %>) ToJSON () ([]byte, error) {
-	return json.Marshal(s)
+func (<%= short %> *<%= name %>) ToJSON () []byte{
+	b, _ := json.Marshal(<%= short %>)
+	return b
+}
+
+func (<%= short %> *<%= name %>) ToMap () map[string]interface {
+	return structs.Map(<%= short %>)
 }
 
 <% for (var i=0;i<attributes.length; i++) { var a = attributes[i]; %>
@@ -36,3 +42,15 @@ func (<%= short %> *<%= name %>) Get<%=a.name%> () <%= a.type %> {
 <% } %> 
 
 <% } %>
+
+func New<%= name %> New<%= name%>FromJSON(bytes []byte) *<%= name %> {
+	
+	var <%= name.toLowerCase() %> *<%= name %>
+	
+	err := json.Unmarshal(bytes, &<%= name.toLowerCase() %>)
+	
+	if err != nil {
+		return nil
+	}
+	return <%= name.toLowerCase() %>
+} 
