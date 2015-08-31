@@ -36,7 +36,7 @@ export function render (model:IModel): Promise<TemplateResult> {
 			
 			m.type = tsType(m.type);
 			m.access = m.access||'public'
-			m.readonly = !!~m.modifiers.indexOf('readolny');
+			m.readonly = !!~m.modifiers.indexOf('readonly');
 			m.required = !!~m.modifiers.indexOf('required')
 			if (m.required) {
 				required.push(`${m.name}:${m.type}`)
@@ -51,7 +51,7 @@ export function render (model:IModel): Promise<TemplateResult> {
 			content:  yield compile(nodePath.join(__dirname,'template.hbs'), value)
 	}
 		
-	})
+	});
 	
 	
 	

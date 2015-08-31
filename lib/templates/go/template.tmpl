@@ -1,3 +1,8 @@
+package <%= package %>
+
+import (
+	"encoding/json"
+)
 
 <% for (var i=0; i < comments.length; i++) { %>
 // <%= comments[i] %> <% } %>
@@ -17,11 +22,16 @@ type <%= name %> struct {
 	<% } %>
 }
 
+<% var short = name[0].toLowerCase(); %>
+
+func (<%= short %> *<%= name %>) ToJSON () ([]byte, error) {
+	return json.Marshal(s)
+}
 
 <% for (var i=0;i<attributes.length; i++) { var a = attributes[i]; %>
 <% if (a.readonly && a.access !== 'private') { %>
-func (<%= name[0].toLowerCase() %> *<%= name %>) Get<%=a.name%> () <%= a.type %> {
-	return t.<%=a.name.toLowerCase()%>
+func (<%= short %> *<%= name %>) Get<%=a.name%> () <%= a.type %> {
+	return <%= short %>.<%=a.name.toLowerCase()%>
 } 
 <% } %> 
 

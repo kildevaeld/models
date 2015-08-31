@@ -8,7 +8,7 @@ import { {{reference}} } from './{{reference}}'
 {{#each comments}}
 // {{this}}
 {{/each}}
-class {{name}} {
+export class {{name}} {
   {{#each attributes}}
   private _{{name}}: {{type}}
   {{/each}}
@@ -21,8 +21,11 @@ class {{name}} {
     return this._{{name}};
   }
   {{#unless readonly}}
-  {{access}} set {{name}}({{name}}:{{type}}) {
-    this._{{name}} = {{name}}
+  {{access}} set {{name}}(value:{{type}}) {
+    let old = this._{{name}};
+    this._{{name}} = value
+    if (old == value)
+      this.__triggerChange('{{name}}', old, value);
   } 
   {{/unless}}
   {{/each}}
@@ -40,6 +43,20 @@ class {{name}} {
     this._{{name}} = {{name}};  
     {{/if}}
     {{/each}}
+  
+  }
+  
+  toJSON (): any {
+    
+    let out = {};
+    {{#each attributes}}
+    out['{{name}}'] = this.{{name}}  
+    {{/each}}
+    return out;
+  
+  }
+  
+  protected __triggerChange (attribute:string,oldValue:any,newValue:any) {
   
   }
   
