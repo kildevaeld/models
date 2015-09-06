@@ -26,17 +26,16 @@ String.prototype.capitalize = function (): string {
 }
 	 
 
-
-
-export function goType (type: IAttributeType): string {
+export function goType (type: IAttributeType, map:any={}): string {
 	let ai = AttributeIdentifier
 	switch (type.identifier) {
 		case ai.Custom:
-			return (<AttributeCustomType>type).value
+			var val = (<AttributeCustomType>type).value
+			return map[val]||val
 		case ai.Reference:
 			return '*' + (<AttributeReferenceType>type).reference
 		case ai.Id:
-			return "int"
+			return "uint"
 		case ai.Date:
 			return "*time.Time"
 		default:
@@ -44,7 +43,7 @@ export function goType (type: IAttributeType): string {
 	}
 }
 
-export function render (model:IModel): Promise<TemplateResult> {
+export function render (model:IModel, options:any={}): Promise<TemplateResult> {
 	return co(function *() {
 		let value:any = {
 			name: model.name,
@@ -53,11 +52,14 @@ export function render (model:IModel): Promise<TemplateResult> {
 			package: model.package
 		}
 		let required = [];
-		
+		console.log(options)
 		value.attributes = model.attributes.map(function (attr) {
 			let req = !!~attr.modifiers.indexOf('required')
-			let tname = goType(attr.type)
+			
+			let tname = goType(attr.type, options.map)
+			
 			let type = attr.repeated ? `[]${tname}` : tname
+			
 			type = ((req || attr.repeated) ? '' : '*') + type
 			
 			if (req) {

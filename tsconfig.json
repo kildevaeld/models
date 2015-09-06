@@ -28,14 +28,6 @@
         "./src/templates/swift/index.ts",
         "./src/templates/template.ts",
         "./src/templates/typescript/index.ts",
-        "./src/tokenizer.ts",
-        "./typings/commander/commander.d.ts",
-        "./typings/es6-promise/es6-promise.d.ts",
-        "./typings/glob/glob.d.ts",
-        "./typings/handlebars/handlebars.d.ts",
-        "./typings/minimatch/minimatch.d.ts",
-        "./typings/node/node.d.ts",
-        "./typings/parser.d.ts",
-        "./typings/tsd.d.ts"
+        "./src/tokenizer.ts"
     ]
 }

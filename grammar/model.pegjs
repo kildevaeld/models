@@ -54,7 +54,7 @@ attributes
   ) { return attrs; }
 
 attribute
- =  c:comment? space? ac:Access? space? m:modifiers? space? n:word space? ":" space? t:Type space? v:validate? comment? {
+ =  c:comment? space? ac:Access? space? m:modifiers? space? n:word space? ":"? space? t:Type space? v:validate? comment? {
    return { modifiers:m||[], name:n, type:t.name, validations: v||[], repeated:t.repeated, comments:c, access:ac}; }
 
 
@@ -74,6 +74,14 @@ Validate "validate"
   / "range" space? min:integer ":" max:integer space? { return {name:'range',args: [min,max]}; }
   / "pattern" space? r:RegularExpressionLiteral space? { return r; }
   / "length" space? len:integer space? { return {name:'length',args:[len]}}
+  / "enum" space? "(" space? w:WordList space? ")" { return {name:'enum', args:w}; }
+
+
+WordList "word list"
+ = val:(
+    first: (a:word eol? { return a;} )
+    rest: (space* eol? ","? eol? a:word { return a; })* { return [first].concat(rest);}
+  ) { return val; }
 
 modelName
   = space? w:word space? { return w }
@@ -84,7 +92,9 @@ Type
 
 TypeToken "type"
  = b:builtins { return {name:b, type: 'builtin'}; }
- / w:word { return getType(w); }
+ / m:model { return {name:'model', type: 'builtin', definition:m}; }
+ / o:Object { return {name:'model', type: 'builtin', definition:m}; }
+ // w:word { return getType(w); }
 
 modifiers
   = space? m:(
@@ -178,6 +188,12 @@ builtins
  / "id"
  / "date"
 
+
+Object 'object'
+ = "{" eol? space* attrs:(
+    first:(a:attribute eol? { return a;} )
+    rest: (space? LineBreak? ","? eol? a:attribute { return a; })* { return [first].concat(rest);}
+  ) space* "}" { return attrs; }
 
 integer
   = w:[0-9]+ { return parseInt(w.join('')); }

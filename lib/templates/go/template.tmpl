@@ -30,7 +30,7 @@ func (<%= short %> *<%= name %>) ToJSON () []byte{
 	return b
 }
 
-func (<%= short %> *<%= name %>) ToMap () map[string]interface {
+func (<%= short %> *<%= name %>) ToMap () map[string]interface{} {
 	return structs.Map(<%= short %>)
 }
 
@@ -43,7 +43,7 @@ func (<%= short %> *<%= name %>) Get<%=a.name%> () <%= a.type %> {
 
 <% } %>
 
-func New<%= name %> New<%= name%>FromJSON(bytes []byte) *<%= name %> {
+func New<%= name %>FromJSON(bytes []byte) *<%= name %> {
 	
 	var <%= name.toLowerCase() %> *<%= name %>
 	

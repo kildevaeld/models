@@ -65,7 +65,7 @@ function asyncGlob(str) {
   });
 }
 
-function *compile(file, renderer) {
+function *compile(file, renderer, options) {
 
   let json = [];
   let models = yield parser.parseFile(file);
@@ -74,7 +74,7 @@ function *compile(file, renderer) {
     let model = models[i]
     let val
     if (renderer) {
-      val = yield renderer.render(model)
+      val = yield renderer.render(model, options)
     } else {
       val = {
         content: JSON.stringify(model, null, 2),
@@ -152,7 +152,7 @@ co(function*() {
   for (i = 0; i < files.length; i++) {
     let filePath = files[i];
 
-    file = yield compile(filePath, renderer)
+    file = yield compile(filePath, renderer, options)
 
     json = json.concat(file)
 

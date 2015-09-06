@@ -42,7 +42,7 @@ gulp.task('build', ['copy'],function () {
      "noLib": false,
      "preserveConstEnums": true,
      "suppressImplicitAnyIndexErrors": true,
-     typescript: require('typescript')
+     //typescript: require('typescript')
   }));
 
   return result.js
