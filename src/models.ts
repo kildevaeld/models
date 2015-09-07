@@ -2,8 +2,8 @@
 
 export enum AttributeIdentifier {
   // numbers
-  UInt64, UInt32, UInt16, UInt8,Int64, Int32, Int16, Int8, Int, UInt, Float, Double, 
-  String, Id, Boolean, Reference, Custom, Date
+  UInt64, UInt32, UInt16, UInt8,Int64, Int32, Int16, Int8, Int, UInt, Float, Double,
+  String, Id, Boolean, Reference, Custom, Date, Object, Model
 }
 
 export interface IAttributeType {
@@ -14,12 +14,14 @@ export interface IAttributeType {
 
 export class AttributeBuiltinType implements IAttributeType {
   identifier: AttributeIdentifier
+  definition: any
   get name (): string {
     return AttributeIdentifier[this.identifier]
   }
-  constructor(type:AttributeIdentifier) {
+  constructor(type:AttributeIdentifier, definition: any) {
     this.identifier = type
-  } 
+    this.definition = definition
+  }
   toJSON (): any {
     let names = Object.getOwnPropertyNames(this);
     let out: any = {};
@@ -43,7 +45,7 @@ export class AttributeReferenceType extends AttributeBuiltinType {
   constructor(type:AttributeIdentifier, options:AttributeReferenceTypeOptions) {
     super(type)
     this.reference = options.reference
-  } 
+  }
 }
 
 export interface AttributeCustomTypeOptions {
@@ -55,7 +57,7 @@ export class AttributeCustomType extends AttributeBuiltinType {
   constructor(type:AttributeIdentifier, options:AttributeCustomTypeOptions) {
     super(type)
     this.value = options.value
-  } 
+  }
 }
 
 export enum Modifier {

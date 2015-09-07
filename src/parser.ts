@@ -15,13 +15,15 @@ function capitalize (str:string): string {
 interface TypeMap {
   name: string
   type: string
+  definition?:any
 }
 
 function stringToType (type:TypeMap): IAttributeType {
   let attr: IAttributeType
   let id: AttributeIdentifier = AttributeIdentifier[capitalize(type.name)]
+
   if (type.type === 'builtin') {
-    attr = new AttributeBuiltinType(id)
+    attr = new AttributeBuiltinType(id, type.definition)
   } else if (type.type === 'custom') {
     attr = new AttributeCustomType(AttributeIdentifier.Custom, {value:type.name})
   } else if (type.type === 'reference') {
@@ -36,12 +38,22 @@ interface Template {
   name: string
 }
 
+function parseAttributes (attrs) {
 
-function JSONToIModel (model: any): IModel {
-  for (let attr of model.attributes) {
+  for (let attr of attrs) {
     let type = stringToType(attr.type)
     attr.type = type;
+
+    if (attr.type.definition) {
+
+      attr.definition = parseAttributes(attr.type.definition)
+    }
   }
+  return attrs
+}
+
+function JSONToIModel (model: any): IModel {
+  model.attributes = parseAttributes(model.attributes);
   return model
 }
 
@@ -77,7 +89,7 @@ export function parseFile (path: string): Promise<Array<IModel>> {
     if (models === null) return;
 
     return parseResult(models)
-    
+
   });
 
 }

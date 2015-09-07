@@ -15,6 +15,7 @@ function errorAndExit(e, code?) {
 import * as swift from './templates/swift'
 import * as go from './templates/go'
 import * as typescript from './template/typescript'
+import * as mongoose from './template/mongoose'
 
 function findTemplate (str?:name) {
 	if (str == null) return null
@@ -23,6 +24,7 @@ function findTemplate (str?:name) {
 		case 'go': return go
 		case 'typescript':
 		case 'ts': return typescript
+		case 'mongoose': return mongoose
 		default:
 			throw new Error('template not found');
 	}
@@ -58,10 +60,10 @@ function asyncGlob(str:string): Promise<any> {
 
 
 function * compile (file: string, renderer?:any): File[] {
-	
+
 	let json: Model[] = [];
 	let models = yield parser.parseFile(file);
-	
+
 	for (let i=0;i<models.length;i++) {
 			let model = models[i]
 			let val
@@ -73,7 +75,7 @@ function * compile (file: string, renderer?:any): File[] {
 					extension: '.json'
 				}
 			}
-			
+
 			val = {
 				name: model.name + val.extension,
 				content: val.content
@@ -81,35 +83,35 @@ function * compile (file: string, renderer?:any): File[] {
 
 			json.push(val)
 	}
-	
+
 	return json;
 }
 
 compileCmd.action(function (globPattern) {
 
-	
+
 	let template = compileCmd.template,
 			destPath = compileCmd.out,
 			concat = compileCmd.concat
 
 	co(function *() {
-		
+
 		let files = yield asyncGlob(globPattern)
-	
+
 		let renderer = findTemplate(template);
-		
-		
+
+
 		let json: File[] = [], file: File, i;
-		
+
 		for (i=0;i<files.length;i++) {
 			let filePath = files[i];
-			
+
 			file = yield compile(filePath, renderer)
-			
+
 			json = json.concat(file)
-			
+
 		}
-		
+
 
 		if (renderer && renderer.additionalFiles) {
 			let val = yield renderer.additionalFiles()
@@ -118,21 +120,21 @@ compileCmd.action(function (globPattern) {
 		}
 
 		if (concat) {
-			
+
 			let file = json.map(function (m) {
 				return m.content
 			});
-			
+
 			if (renderer) {
 				file = file.join('\n');
 			} else {
 				file = JSON.stringify(JSON.parse('['+file.join(',')+']'),null,2);
 			}
-			
+
 			json = [{name:concat, content:file}]
 		}
-		
-		
+
+
 		for (let i=0;i<json.length;i++) {
 			let m = json[i]
 			if (destPath) {

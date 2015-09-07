@@ -27,7 +27,7 @@ gulp.task('compile:peg', function (done) {
 });
 
 
-gulp.task('build', ['copy'],function () {
+gulp.task('build', ['copy', 'compile:peg'],function () {
   var result = gulp.src('src/**/*.ts')
   .pipe(typescript({
      noImplicitAny: false,
@@ -53,7 +53,7 @@ gulp.task('build', ['copy'],function () {
 });
 
 gulp.task('copy', function () {
-  return gulp.src('src/**/*.hbs')
+  return gulp.src('src/**/{*.hbs,*.tmpl}')
   .pipe(gulp.dest('./lib'));
 })
 

@@ -20,6 +20,13 @@
     }
     Models.push(name)
   }
+
+  function flatten(arr) {
+    return arr.reduce(function (flat, toFlatten) {
+      return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+    }, []);
+  }
+
 }
 
 start
@@ -93,8 +100,8 @@ Type
 TypeToken "type"
  = b:builtins { return {name:b, type: 'builtin'}; }
  / m:model { return {name:'model', type: 'builtin', definition:m}; }
- / o:Object { return {name:'model', type: 'builtin', definition:m}; }
- // w:word { return getType(w); }
+ / o:Object { return {name:'object', type: 'builtin', definition:o}; }
+ / w:word { return getType(w); }
 
 modifiers
   = space? m:(
@@ -190,10 +197,10 @@ builtins
 
 
 Object 'object'
- = "{" eol? space* attrs:(
-    first:(a:attribute eol? { return a;} )
-    rest: (space? LineBreak? ","? eol? a:attribute { return a; })* { return [first].concat(rest);}
-  ) space* "}" { return attrs; }
+ = space? "{" space* val:(
+    first: (eol? a:attribute eol? { return a;} )
+    rest: (space* eol? ","? eol? a:attributes { return a; })* { return [first].concat(rest);}
+  ) space* "}" { return flatten(val); }
 
 integer
   = w:[0-9]+ { return parseInt(w.join('')); }

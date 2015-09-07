@@ -1,0 +1,59 @@
+
+const mongoose = require('mongoose'),
+  Schema = mongoose.Schema,
+  validate = require('mongoose-validator');
+
+<% for (var i=0,ii=references.length;i<ii;i++) { %> <% var ref = references[i]; %>
+const <%= ref %> = require('./<%=ref%>'); <% } %>
+
+module.exports = function () {
+
+  let <%= name.toLowerCase() %>Schema = new Schema({
+  <% for (var i=0,ii=attributes.length;i<ii;i++) { %> <% var a = attributes[i]; %>
+    <% for (var x=0,xx=a.comments.length;x<xx;x++) { %> <% var c = a.comments[x]; %>// <%= c %> <% } %>
+  <% if (a.type == "Object") { %>
+    <%= a.name %>: {
+      <% for (var z=0,zz=a.attributes.length;z<zz;z++) { %> <% var aa = a.attributes[z]; %>
+      <%= aa.name %>: {
+        <% if (aa.reference) { %>
+        type: Schema.Types.ObjectId,
+        ref: '<%= aa.reference %>'
+        <% } else { %>
+        type: <%= aa.type %>, <%} %>
+        required: <%= aa.required %>,
+        index: <%= aa.index %>, <% if (aa.validations) { %>
+        validations: [
+          <% for (var y=0,yy=aa.validations.length;y<yy;y++) { %> <% var v = aa.validations[y]; %>
+          validate({
+            validator: '<%= v.name %>',
+            args: [<%= v.args %>]
+          })<% if (y + 1 < yy) { %>,<% } %>
+          <% } %>]<% } %>
+      } <% if (z + 1 < zz) { %>,<% }%> <% } %>
+
+    } <% if (i + 1 < ii) { %>,<% }%>
+  <%} else { %>
+    <%= a.name %>: <% if (a.repeated) {%>[<%}%>{
+      <% if (a.reference) { %>
+      type: Schema.Types.ObjectId,
+      ref: '<%= a.reference %>'
+      <%} else { %>
+      type: <%= a.type %>, <%} %>
+      required: <%= a.required %>,
+      index: <%= a.index %>, <% if (a.validations) { %>
+      validations: [
+        <% for (var y=0,yy=a.validations.length;y<yy;y++) { %> <% var v = a.validations[y]; %>
+        validate({
+          validator: '<%= v.name %>',
+          args: <%= v.args %>
+        })<% if (y + 1 < yy) { %>,<% } %>
+        <% } %>
+      ]
+      <% } %>
+    }<%if(a.repeated){%>]<%}%><% if (i + 1 < ii) { %>,<% }%> <% } %>
+
+  <%}%>
+  });
+
+  return <%= name.toLowerCase() %>Schema;
+};

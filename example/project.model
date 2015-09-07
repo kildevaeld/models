@@ -17,6 +17,12 @@ model Task {
   expire: date
   unique milestones: [Milestone]
   project: Project
+
+  index date: {
+    start: date
+    finish: date
+  }
+
 }
 /** What about this for a comment */
 model Project {

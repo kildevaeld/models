@@ -14,7 +14,8 @@ const program = require('commander'),
 // Templates
 const swift = require('../lib/templates/swift'),
   go = require('../lib/templates/go'),
-  ts = require('../lib/templates/typescript');
+  ts = require('../lib/templates/typescript'),
+  mongoose = require('../lib/templates/mongoose');
 
 function findTemplate(str) {
   if (str == null) return null;
@@ -26,6 +27,8 @@ function findTemplate(str) {
     case 'typescript':
     case 'ts':
       return ts;
+    case 'mongoose':
+      return mongoose;
     default:
       throw new Error('template not found');
   }
@@ -136,7 +139,7 @@ if (!globPattern.length) {
 }
 
 function errorAndExit(e, code) {
-	console.error(e.stack);
+	console.error(e);
 	process.exit(code||1);
 }
 
