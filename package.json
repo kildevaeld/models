@@ -17,8 +17,7 @@
     "gulp-typescript": "^2.8.0",
     "microtemplate": "^0.1.4",
     "pegjs": "^0.8.0",
-    "pipe": "git+https://github.com/kildevaeld/node-pipe.git",
-    "typescript": "microsoft/typescript"
+    "pipe": "git+https://github.com/kildevaeld/node-pipe.git"
   },
   "dependencies": {
     "co": "^4.6.0",
